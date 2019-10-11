@@ -5,11 +5,9 @@ var wordArray = ["Cocker Spaniel", "Dalmatian", "Finnish spitz", "German shepher
 var wins = 0;
 var losses = 0;
 var guessesRemaining = 10;
-var listLettersAlreadyGuessed = "";
 var listLettersAlreadyGuessedArray = [];
 
 var wordToGuess;
-var userGuessedCorrectly = false;
 var slotsFilledIn = 0;
 
 // type: () -> undefined
@@ -28,21 +26,22 @@ function confirmStart() {
         }
     ];
 
-    // inquirer.prompt(readyToStart)
-    //     .then(function (answers) {
-    //         if (answers.readyToPlay) {
-    //             console.log("Ok " + answers.name + ", let the game begin!");
+    inquirer.prompt(readyToStart)
+        .then(function (answers) {
+            if (answers.readyToPlay) {
+                console.log("Ok " + answers.name + ", let the game begin!");
                 startGame();
-        //     } else {
-        //         console.log("Maybe another time...");
-        //     }
-        // });
+            } else {
+                console.log("Maybe another time...");
+            }
+        });
 }
 
 function startGame() {
+    listLettersAlreadyGuessedArray = [];
     guessesRemaining = 10;
     wordToGuess = chooseRandomWord();
-    console.log("Your word contains " + wordToGuess.length + " letters.");
+    console.log("Your word: " + wordToGuess.showWord());
     guessLetter();
     listLettersAlreadyGuessed = [];
     listLettersAlreadyGuessedArray = [];
@@ -51,6 +50,7 @@ function startGame() {
 // type: () -> Word
 function chooseRandomWord() {
     let randomWord = wordArray[Math.floor(Math.random() * wordArray.length)];
+    console.log(randomWord);
     return new Word(randomWord);
 }
 
@@ -65,27 +65,20 @@ function guessLetter() {
         ]).then(function (guess) {
             let guessedLetter = guess.letter.toUpperCase();
             console.log("You guessed " + guessedLetter);
-            userGuessedCorrectly = false;
             if (listLettersAlreadyGuessedArray.indexOf(guessedLetter) > -1) {
                 console.log("This letter was already guessed.");
                 guessLetter();
             } else {
                 listLettersAlreadyGuessedArray.push(guessedLetter);
-                console.log("Letters already guessed: " + listLettersAlreadyGuessedArray...(" "));
-                for (i = 0; i < wordToGuess.letters.length; i++) {
-                    if (guess.letter.toUpperCase() === wordToGuess.letters[i].character && wordToGuess.letters[i].charactersCorrectlyGuessed === false) {
-                        wordToGuess.letters[i].charactersCorrectlyGuessed === true;
-                        userGuessedCorrectly = true;
-                        wordToGuess.underscores[i] = guess.letter.toUpperCase();
-                        slotsFilledIn++;
-                    }
-                }
+                console.log("Letters already guessed: " + listLettersAlreadyGuessedArray.join(" "));
+                let userGuessedCorrectly = wordToGuess.checkGuessedLetter(guessedLetter);
                 if (userGuessedCorrectly) {
                     console.log("Correct guess.");
-                    checkIfUserWon();
                 } else {
                     console.log("Incocrect guess.");
                 }
+                console.log(wordToGuess.showWord());
+                checkIfUserWon();
             }
         });
 
@@ -100,7 +93,7 @@ function checkIfUserWon() {
         console.log("Losses: " + losses);
         playAgain();
     }
-    else if (slotsFilledIn === wordToGuess.letters.length) {
+    else if (wordToGuess.guessedCorrectly()) {
         console.log("You won! Congratulations!");
         wins++;
         console.log("Wins: " + wins);
@@ -108,7 +101,7 @@ function checkIfUserWon() {
         playAgain();
     }
     else {
-        guessLetter("");
+        guessLetter();
     }
 }
 
@@ -123,12 +116,7 @@ function playAgain() {
     ];
     inquirer.prompt(playAgain).then(function (userWantsTo) {
         if (userWantsTo.playAgain) {
-            listLettersAlreadyGuessed = "";
-            listLettersAlreadyGuessedArray = [];
-            slotsFilledIn = 0;
             startGame();
-        } else {
-            return;
         }
     })
 }

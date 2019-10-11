@@ -2,7 +2,7 @@
 // type: (string) -> Letter
 var Letter = function (letter) {
     this.letter = letter.toUpperCase(); // type: string
-    this.letterGuessedCorrectly = false;
+    this.letterGuessedCorrectly = " " === letter;
 
     // type: () -> string
     this.showLetter = function () {
@@ -13,10 +13,16 @@ var Letter = function (letter) {
         }
     };
     
-    // type: (string) -> undefined
+    /**
+     * returns 'true' if the guess was correct
+     */
+    // type: (string) -> boolean
     this.letterGuess = function (guess) {
         if (guess == this.letter) {
-            this.letterGuessedCorrectly == true;
+            this.letterGuessedCorrectly = true;
+            return true;
+        } else {
+            return false;
         }
     };
 };

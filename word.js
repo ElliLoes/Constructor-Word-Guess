@@ -25,13 +25,17 @@ var Word = function (word) {
     };
 
     /**
-     * Checks the guessed letter against the word.
+     * Checks the guessed letter against the word and returns 'true' if any letter was guessed correctly.
      */
-    // type: (string) -> undefined
+    // type: (string) -> boolean
     this.checkGuessedLetter = function (guessedLetter) {
+        let letterGuessedCorrectly = false;
         for (var i = 0; i < this.letters.length; i++) {
-            this.letters[i].letterGuess(guessedLetter)
+            if (this.letters[i].letterGuess(guessedLetter)) {
+                letterGuessedCorrectly = true;
+            }
         }
+        return letterGuessedCorrectly;
     };
 
     /**
