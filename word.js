@@ -3,18 +3,21 @@ var Letter = require("./letter.js");
 // type: (string) -> Word
 var Word = function (word) {
     this.letters = []; // type: Array<Letter>
+    this.length = word.length; // type: number
     for (var i = 0; i < word.length; i++) {
-        // type of Letter constructor: (string) -> Letter
         // type of String.prototype.charAt: (number) -> string
-        this.letters.push(new Letter(word.charAt(i)));
+        let character = word.charAt(i); // type: string
+        // type of Letter constructor: (string) -> Letter
+        let letter = new Letter(character); // type: Letter
+        this.letters.push(letter); // type: number
     }
 
     /**
      * Returns a string representing the word.
      */
     // type: () -> string
-    this.currentWord = function () {
-        var letterCharacter = "";
+    this.showWord = function () {
+        var letterCharacter = ""; // type: string
         for (var i=0; i < this.letters.length; i++) {
             letterCharacter += this.letters[i].showLetter() + " ";
         }
@@ -26,14 +29,23 @@ var Word = function (word) {
      */
     // type: (string) -> undefined
     this.checkGuessedLetter = function (guessedLetter) {
-        var correctAnswer = false;
         for (var i = 0; i < this.letters.length; i++) {
-            if (this.letters[i].letterGuess(guessedLetter)) {
-                correctAnswer = true;
+            this.letters[i].letterGuess(guessedLetter)
+        }
+    };
+
+    /**
+     * return 'true' if all leters were guessed correctly
+     */
+    // type: () -> boolean
+    this.guessedCorrectly = function() {
+        for (var i = 0; i < this.letters.length; i++) {
+            if (!this.letters[i].letterGuessedCorrectly) {
+                return false;
             }
         }
-        return correctAnswer;
-    };
+        return true;
+    }
 };
 
 module.exports = Word;

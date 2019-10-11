@@ -4,11 +4,12 @@ var Letter = function (letter) {
     this.letter = letter.toUpperCase(); // type: string
     this.letterGuessedCorrectly = false;
 
+    // type: () -> string
     this.showLetter = function () {
         if (this.letterGuessedCorrectly) {
-            console.log(this.letter);
+           return this.letter;
         } else {
-            console.log ("_");
+            return "_";
         }
     };
     

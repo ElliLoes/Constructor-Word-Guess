@@ -8,12 +8,11 @@ var guessesRemaining = 10;
 var listLettersAlreadyGuessed = "";
 var listLettersAlreadyGuessedArray = [];
 
-var randomWord;
-var someWord;
-var userGuessedCorrectly= false;
+var wordToGuess;
+var userGuessedCorrectly = false;
 var slotsFilledIn = 0;
 
-
+// type: () -> undefined
 function confirmStart() {
     var readyToStart = [
         {
@@ -29,57 +28,55 @@ function confirmStart() {
         }
     ];
 
-    inquirer.prompt(readyToStart)
-        .then(function (answers) {
-            if (answers.readyToPlay) {
-                console.log("Let the game begin!");
+    // inquirer.prompt(readyToStart)
+    //     .then(function (answers) {
+    //         if (answers.readyToPlay) {
+    //             console.log("Ok " + answers.name + ", let the game begin!");
                 startGame();
-            } else {
-                console.log("Maybe another time..");
-                return;
-            }
-        });
+        //     } else {
+        //         console.log("Maybe another time...");
+        //     }
+        // });
 }
 
 function startGame() {
     guessesRemaining = 10;
-    chooseRandomWord();
+    wordToGuess = chooseRandomWord();
+    console.log("Your word contains " + wordToGuess.length + " letters.");
+    guessLetter();
     listLettersAlreadyGuessed = [];
     listLettersAlreadyGuessedArray = [];
 }
 
+// type: () -> Word
 function chooseRandomWord() {
-    randomWord = wordArray[Math.floor(Math.random() * wordArray.length)];
-    someWord = new Word(randomWord);
-    console.log("Your words contains " + randomWord.length + " letters.");
-    someWord.splitWord();
-    someWord.generateLetters();
-    guessLetter();
+    let randomWord = wordArray[Math.floor(Math.random() * wordArray.length)];
+    return new Word(randomWord);
 }
 
 function guessLetter() {
-    if (slotsFilledIn < someWord.letters.length || guessesRemaining > 0) {
+    if (slotsFilledIn < wordToGuess.length || guessesRemaining > 0) {
         inquirer.prompt([
             {
+                type: "text",
                 name: "letter",
                 message: "Guess a letter:"
             }
         ]).then(function (guess) {
-            guess.letter.toUpperCase();
-            console.log("You guessed " + guess.letter.toUpperCase());
+            let guessedLetter = guess.letter.toUpperCase();
+            console.log("You guessed " + guessedLetter);
             userGuessedCorrectly = false;
-            if (listLettersAlreadyGuessedArray.indexOf(guess.letter.toUpperCase()) > -1) {
+            if (listLettersAlreadyGuessedArray.indexOf(guessedLetter) > -1) {
                 console.log("This letter was already guessed.");
                 guessLetter();
-            } else if (listLettersAlreadyGuessedArray.indexOf(guess.letter.toUpperCase()) === -1) {
-                listLettersAlreadyGuessed = listLettersAlreadyGuessed.concat(" " + guess.letter.toUpperCase());
-                listLettersAlreadyGuessedArray.push(guess.letter.toUpperCase());
-                console.log("Letters already guessed: " + listLettersAlreadyGuessed);
-                for (i=0; i < someWord.letters.length; i++) {
-                    if (guess.letter.toUpperCase() === someWord.letters[i].character && someWord.letters[i].charactersCorrectlyGuessed === false) {
-                        someWord.letters[i].charactersCorrectlyGuessed === true;
+            } else {
+                listLettersAlreadyGuessedArray.push(guessedLetter);
+                console.log("Letters already guessed: " + listLettersAlreadyGuessedArray...(" "));
+                for (i = 0; i < wordToGuess.letters.length; i++) {
+                    if (guess.letter.toUpperCase() === wordToGuess.letters[i].character && wordToGuess.letters[i].charactersCorrectlyGuessed === false) {
+                        wordToGuess.letters[i].charactersCorrectlyGuessed === true;
                         userGuessedCorrectly = true;
-                        someWord.underscores[i] = guess.letter.toUpperCase();
+                        wordToGuess.underscores[i] = guess.letter.toUpperCase();
                         slotsFilledIn++;
                     }
                 }
@@ -89,13 +86,13 @@ function guessLetter() {
                 } else {
                     console.log("Incocrect guess.");
                 }
-            } 
+            }
         });
 
+    }
 }
-} 
 
-function checkIfUserWon () {
+function checkIfUserWon() {
     if (guessesRemaining === 0) {
         console.log("You lost! Better luck next time!");
         losses++;
@@ -103,7 +100,7 @@ function checkIfUserWon () {
         console.log("Losses: " + losses);
         playAgain();
     }
-    else if (slotsFilledIn === someWord.letters.length) {
+    else if (slotsFilledIn === wordToGuess.letters.length) {
         console.log("You won! Congratulations!");
         wins++;
         console.log("Wins: " + wins);
@@ -115,7 +112,7 @@ function checkIfUserWon () {
     }
 }
 
-function playAgain () {
+function playAgain() {
     var playAgain = [
         {
             type: "confirm",
@@ -124,7 +121,7 @@ function playAgain () {
             default: true
         }
     ];
-    inquirer.prompt(playAgain).then(function(userWantsTo) {
+    inquirer.prompt(playAgain).then(function (userWantsTo) {
         if (userWantsTo.playAgain) {
             listLettersAlreadyGuessed = "";
             listLettersAlreadyGuessedArray = [];
@@ -136,3 +133,4 @@ function playAgain () {
     })
 }
 
+confirmStart();
