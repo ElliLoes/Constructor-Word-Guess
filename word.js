@@ -4,6 +4,7 @@ var Letter = require("./letter.js");
 var Word = function (word) {
     this.letters = []; // type: Array<Letter>
     this.length = word.length; // type: number
+    this.word = word;
     for (var i = 0; i < word.length; i++) {
         // type of String.prototype.charAt: (number) -> string
         let character = word.charAt(i); // type: string
@@ -54,8 +55,3 @@ var Word = function (word) {
 
 module.exports = Word;
 
-// var newWord = new Word("hallo"); // type: Word
-
-// var stringArray = ['hello', 'world'] // type: Array<string>
-// var numberArray = [1, 2, 3] // type: Array<number>
-// var numberArray = [1, "2", 3] // type: Array<number | string>

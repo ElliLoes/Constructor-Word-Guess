@@ -29,8 +29,3 @@ var Letter = function (letter) {
 
 module.exports = Letter;
 
-// "hallo" -> "h", "a", "l", "l", "o"
-// var letterA = new Letter("h"); // type: Letter
-
-// var array = [] // type: Array
-// new Array()
